@@ -21,7 +21,7 @@ export class Router {
    *                            visually
    */
   constructor(homeFunc) {
-    this['home'] = homeFunc;
+    this['home']=homeFunc;
   }
 
   /**
@@ -38,6 +38,8 @@ export class Router {
      * router instance using the 'this' keyword. Substitute 'home' for the variable
      * page
      */
+
+    this[page]=pageFunc;
   }
 
   /**
@@ -65,5 +67,31 @@ export class Router {
      *     and URL + hash to history
      *  4. Finally, call the stored function for the given page
      */
+
+    //1
+    let exist = false;
+    Object.keys(this).forEach(key =>{
+      if(key == page){
+        exist = true;
+      }
+    })
+    if(!exist){
+      console.log('error, function not exist!');
+      return;
+    }
+    //2
+    let hash;
+    if(page == 'home'){
+      hash = '';
+    }
+    else{
+      hash = '#' + page;
+    }
+    //3
+    if(!statePopped && window.location.hash != hash){
+      history.pushState({page:page},'',window.location.origin + hash);
+    }
+    //4
+    this[page]();
   }
 }
